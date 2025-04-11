@@ -1,6 +1,7 @@
 package plagdetect.controller;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +23,71 @@ public class FileController {
     }
 
     public void deleteAllFiles() throws Exception {
+        // First delete all entries from the database
         FileModel.deleteAllFiles();
+    
+        String submissions_dir_path = "src/main/resources/submissions";
+        File submissionsDir = new File(submissions_dir_path);
+        
+        if (submissionsDir.exists() && submissionsDir.isDirectory()) {
+            // Get all immediate subdirectories
+            File[] subdirectories = submissionsDir.listFiles(File::isDirectory);
+            
+            if (subdirectories != null) {
+                for (File subdirectory : subdirectories) {
+                    // Delete the entire subdirectory structure
+                    deleteDirectoryRecursively(subdirectory);
+                }
+                System.out.println("All subdirectories deleted from submissions directory.");
+            }
+        } else {
+            System.out.println("Submissions directory not found: " + submissions_dir_path);
+        }
     }
 
-    public void deleteFile(String fileName) throws Exception {
+    private boolean deleteDirectoryRecursively(File directory) {
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    deleteDirectoryRecursively(file);
+                }
+            }
+        }
+        
+        boolean result = directory.delete();
+        if (!result) {
+            System.out.println("Warning: Could not delete " + directory.getAbsolutePath());
+        }
+        return result;
+    }
+    public void deleteFile(String fileName, String filePath) throws Exception {
+        // First delete entry from the database
         FileModel.deleteFile(fileName);
+        
+        // Get the file and its parent directory
+        File fileToDelete = new File(filePath);
+        File parentDirectory = fileToDelete.getParentFile();
+        
+        if (parentDirectory != null && parentDirectory.exists()) {
+            // Delete all files in the directory first
+            File[] files = parentDirectory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (!file.delete()) {
+                        System.out.println("Warning: Could not delete file: " + file.getAbsolutePath());
+                    }
+                }
+            }
+            
+            // Now delete the directory itself
+            boolean deleted = parentDirectory.delete();
+            if (!deleted) {
+                throw new Exception("Failed to delete the parent directory: " + parentDirectory.getAbsolutePath());
+            }
+        } else {
+            System.out.println("Warning: Parent directory not found for file: " + filePath);
+        }
     }
 
     /**
