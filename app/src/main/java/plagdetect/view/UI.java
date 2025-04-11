@@ -153,7 +153,7 @@ public class UI extends Application {
                 deleteButton.setPrefWidth(100);
                 deleteButton.setOnAction(e -> {
                     try {
-                        fileController.deleteFile(file[0]);
+                        fileController.deleteFile(file[0],file[1]);
                         showAlert("Success", "File '" + file[0] + "' deleted successfully.");
                         loadFileList(fileListLayout);
                     } catch (Exception ex) {
