@@ -30,4 +30,29 @@ public class JPlagDetectionService {
 
         return result;
     }
+
+    public static void openJPlagViewer(File resultZip, File jplagJar) throws Exception {
+    if (!jplagJar.exists()) {
+        throw new IllegalArgumentException("jplag.jar not found at: " + jplagJar.getAbsolutePath());
+    }
+
+    // Build the command: java -jar jplag.jar path/to/result.zip
+    ProcessBuilder processBuilder = new ProcessBuilder(
+        "java", "-jar", jplagJar.getAbsolutePath(), resultZip.getAbsolutePath()
+    );
+
+    processBuilder.redirectErrorStream(true);
+    Process process = processBuilder.start();
+
+    // Optional: Open the default browser to localhost:5000 after a short delay
+    new Thread(() -> {
+        try {
+            Thread.sleep(3000); // wait for the server to boot up
+            java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:1996"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }).start();
+}
+
 }
