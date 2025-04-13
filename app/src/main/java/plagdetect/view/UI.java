@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
+import javafx.application.Platform;
+
 import plagdetect.controller.FileController;
 import plagdetect.controller.JPlagDetect;
 
@@ -21,7 +23,6 @@ public class UI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10));

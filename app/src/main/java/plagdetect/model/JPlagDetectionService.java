@@ -48,7 +48,7 @@ public class JPlagDetectionService {
     new Thread(() -> {
         try {
             Thread.sleep(3000); // wait for the server to boot up
-            java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:5000"));
+            java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:1996"));
         } catch (Exception e) {
             e.printStackTrace();
         }
