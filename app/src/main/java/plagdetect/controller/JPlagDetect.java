@@ -9,9 +9,9 @@ public class JPlagDetect {
 
     public void handlePlagiarismDetection() {
         try {
-            String inputDir = "/home/shravan/builds/PlagDetect/app/src/main/resources/submissions";
-            String outputDir = "/home/shravan/builds/PlagDetect/app/src/main/resources/results";
-	    String jplagJarDir = "/home/shravan/builds/PlagDetect/app/src/main/lib/jplag.jar";
+            String inputDir = "./src/main/resources/submissions";
+            String outputDir = "./src/main/resources/results";
+	    String jplagJarDir = "./src/main/lib/jplag.jar";
 	    File jplagJar = new File(jplagJarDir);
 	    File resultZip = new File(outputDir, "results.zip");
             JPlagResult result = JPlagDetectionService.runDetection(inputDir, outputDir);
